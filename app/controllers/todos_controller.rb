@@ -1,5 +1,4 @@
 class TodosController < ApplicationController
-  before_action :user_authentication
 
   def index
 
@@ -10,15 +9,15 @@ class TodosController < ApplicationController
       render json: {message: "No TODOs to show."}, status: 200
       return
     elsif status == nil
-      render json: @todos, status: 200
+      render json: @todos, status: 200, each_serializer: TodoInfoSerializer
       return
     elsif status == "ongoing"
       @todos = @todos.where(done: false)
-      render json: @todos, status: 200
+      render json: @todos, status: 200, each_serializer: TodoInfoSerializer
       return
     elsif status == "done"
       @todos = @todos.where(done: true)
-      render json: @todos, status: 200
+      render json: @todos, status: 200, each_serializer: TodoInfoSerializer
       return
     else
       render json: {error_message: "Invalid status!"}, status: 404
@@ -61,24 +60,5 @@ class TodosController < ApplicationController
 
   end
 
-private
-
-  def user_authentication
-
-    access_token = request.headers["HTTP_ACCESS_TOKEN"]
-
-    if access_token == nil
-      render json: {error_message: "No access token provided!"}, status: 401
-      return
-    end
-
-    @user = User.find_by(access_token: access_token)
-    if @user == nil
-      render json: {error_message: "Invalid access token!"}, status: 401
-      return
-    end
-
-
-  end
 
 end
