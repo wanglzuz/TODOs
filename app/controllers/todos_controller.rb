@@ -37,6 +37,9 @@ class TodosController < ApplicationController
 
   def create
 
+    todo = TodoManager.create_todo!(params[:text], @user)
+    render json: todo, status: 201, serializer: TodoSerializer
+
   end
 
   def update

@@ -20,6 +20,13 @@ class TodoManager
 
   end
 
+  def self.create_todo!(text, user)
+    todo = Todo.create!({text: text, created: DateTime.now, done: false, user: user})
+    todo.save!
+    return todo
+
+  end
+
 
 
 end

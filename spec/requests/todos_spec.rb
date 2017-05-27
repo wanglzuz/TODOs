@@ -95,6 +95,23 @@ RSpec.describe "Todos", type: :request do
     end
   end
 
+  describe "create action" do
+    context "when user sends text" do
+      it "creates a new todo with this text and default other values" do
+
+        new_text = "New todo."
+        old_dtb_count = Todo.count
+        post "/todos", headers: {"HTTP_ACCESS_TOKEN": @user1.access_token},
+                       params: {"text": new_text}
+        expect(response).to have_http_status 201
+        created_todo = Todo.last
+        expect(created_todo.text).to eq new_text
+        expect(Todo.count).to eq old_dtb_count + 1
+
+      end
+    end
+  end
+
   describe "update action" do
     context "when user sends text" do
       it "saves it as TODO's updated text" do
