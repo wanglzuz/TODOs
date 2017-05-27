@@ -7,6 +7,15 @@ class TodoManager
   def mark_done!
 
     @todo.done = true
+    @todo.save!
+    return
+
+  end
+
+  def edit_text!(text)
+
+    @todo.text = text
+    @todo.save!
     return
 
   end

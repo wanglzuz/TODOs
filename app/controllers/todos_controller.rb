@@ -41,11 +41,16 @@ class TodosController < ApplicationController
 
   def update
 
+    if find_todo_with_id(params[:id])
+      TodoManager.new(@todo).edit_text!(params[:text])
+      render json: @todo, status: 200, serializer: TodoSerializer
+    end
+
   end
 
   def done
 
-    if find_todo_with_id(id: params[:id])
+    if find_todo_with_id(params[:id])
       TodoManager.new(@todo).mark_done!
       render json: @todo, status: 200, serializer: TodoSerializer
     end
@@ -60,7 +65,7 @@ private
 
   def find_todo_with_id (id)
 
-    @todo = Todo.find_by(id: params[:id])
+    @todo = Todo.find_by(id: id)
     unless @todo == nil or @todo.user == @user
       @todo = nil
     end
