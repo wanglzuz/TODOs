@@ -33,6 +33,23 @@ RSpec.describe "Todos", type: :request do
       end
     end
 
+    describe "TODO ownership error" do
+      context "when TODO ID does not exist or TODO does not belong to user" do
+        it "gives a NOT_FOUND error" do
+
+          #non-existent ID
+          get "/todos/a", headers: {"HTTP_ACCESS_TOKEN": user1.access_token}
+          expect(response).to have_http_status 404
+          expect(response.body).to include "NOT_FOUND"
+
+          #TODO with this ID belongs to a different user
+          get "/todos/#{todo1.id}", headers: {"HTTP_ACCESS_TOKEN": user2.access_token}
+          expect(response).to have_http_status 404
+          expect(response.body).to include "NOT_FOUND"
+
+        end
+      end
+    end
 
     describe "index action" do
 
@@ -65,10 +82,8 @@ RSpec.describe "Todos", type: :request do
 
     end
 
-
     describe "show action" do
-
-      context "when id is valid (exists and belongs to the user)" do
+      context "when a valid TODO is requested (by ID)" do
         it "shows TODO detail" do
 
           get "/todos/#{todo1.id}", headers: {"HTTP_ACCESS_TOKEN": user1.access_token}
@@ -77,21 +92,19 @@ RSpec.describe "Todos", type: :request do
 
         end
       end
+    end
 
-      context "when id is invalid (non-existent or does not belong to the user)" do
-        it "gives an 'invalid ID' error" do
+    describe "done action" do
+      context "when done is called on a valid TODO" do
+        it "sets the 'done' variable to 'true'" do
 
-          get "/todos/#{todo1.id + 1}", headers: {"HTTP_ACCESS_TOKEN": user1.access_token}
-          expect(response).to have_http_status 404
-          expect(response.body).to include "NOT_FOUND"
-
-          get "/todos/#{todo1.id}", headers: {"HTTP_ACCESS_TOKEN": user2.access_token}
-          expect(response).to have_http_status 404
-          expect(response.body).to include "NOT_FOUND"
+          put "/todos/#{todo1.id}/done", headers: {"HTTP_ACCESS_TOKEN": user1.access_token}
+          expect(response).to have_http_status 200
+          updated_todo = Todo.find(id: todo1.id)
+          expect(updated_todo.done).to eq true
 
         end
       end
-
     end
 
   end

@@ -29,20 +29,14 @@ class TodosController < ApplicationController
 
   def show
 
-    @todo = Todo.find_by(id: params[:id])
-
-    if (@todo == nil) or (@todo.user != @user)
-      render json: {error_message: "TODO with this ID does not exist!", code: "NOT_FOUND"}, status: 404
-      return
-    else
+    if find_todo_with_id(params[:id])
       render json: @todo, status: 200, serializer: TodoSerializer
-      return
     end
 
   end
 
   def create
-    
+
   end
 
   def update
@@ -51,11 +45,33 @@ class TodosController < ApplicationController
 
   def done
 
+    if find_todo_with_id(id: params[:id])
+      TodoManager.new(@todo).mark_done!
+      render json: @todo, status: 200, serializer: TodoSerializer
+    end
+
   end
 
   def destroy
 
   end
+
+private
+
+  def find_todo_with_id (id)
+
+    @todo = Todo.find_by(id: params[:id])
+    unless @todo == nil or @todo.user == @user
+      @todo = nil
+    end
+    if @todo == nil
+      render json: {error_message: "TODO with this ID does not exist!", code: "NOT_FOUND"}, status: 404
+      return false
+    end
+    return true
+  end
+
+
 
 
 end
