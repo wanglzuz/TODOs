@@ -27,6 +27,11 @@ class TodoManager
 
   end
 
+  def delete!
+    @todo.destroy!
+    return
+  end
+
 
 
 end

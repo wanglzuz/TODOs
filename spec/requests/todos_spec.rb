@@ -140,4 +140,19 @@ RSpec.describe "Todos", type: :request do
     end
   end
 
+  describe "destroy action" do
+    context "when user requests a deletion of TODO with given ID" do
+      it "deletes it from database" do
+
+        old_dtb_count = Todo.count
+        delete "/todos/#{@todo1.id}", headers: {"HTTP_ACCESS_TOKEN": @user1.access_token}
+        expect(response).to have_http_status 200
+        expect(Todo.count).to eq old_dtb_count - 1
+        supposedly_deleted_todo = Todo.find_by(id: @todo1.id)
+        expect(supposedly_deleted_todo).to eq nil
+
+      end
+    end
+  end
+
 end

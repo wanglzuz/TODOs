@@ -61,6 +61,10 @@ class TodosController < ApplicationController
   end
 
   def destroy
+    if find_todo_with_id(params[:id])
+      TodoManager.new(@todo).delete!
+      render json: {}, status: 200
+    end
 
   end
 
