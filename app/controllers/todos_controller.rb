@@ -6,7 +6,7 @@ class TodosController < ApplicationController
     status = params[:status]
 
     if @todos == nil
-      render json: {message: "No TODOs to show."}, status: 200
+      render json: [], status: 200
       return
     elsif status == nil
       render json: @todos, status: 200, each_serializer: TodoInfoSerializer
@@ -20,7 +20,7 @@ class TodosController < ApplicationController
       render json: @todos, status: 200, each_serializer: TodoInfoSerializer
       return
     else
-      render json: {error_message: "Invalid status!"}, status: 404
+      render json: {error_message: "Invalid status!", code: "INVALID_STATUS"}, status: 404
       return
     end
 
@@ -31,21 +31,18 @@ class TodosController < ApplicationController
 
     @todo = Todo.find_by(id: params[:id])
 
-    if @todo == nil
-      render json: {error_message: "TODO with this ID does not exist!"}, status: 404
-      return
-    elsif @todo.user != @user
-      render json: {error_message: "This TODO does not belong to you!"}, status: 403
+    if (@todo == nil) or (@todo.user != @user)
+      render json: {error_message: "TODO with this ID does not exist!", code: "NOT_FOUND"}, status: 404
       return
     else
-      render json: @todo, status: 200
+      render json: @todo, status: 200, serializer: TodoSerializer
       return
     end
 
   end
 
   def create
-
+    
   end
 
   def update
