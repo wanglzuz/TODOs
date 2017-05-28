@@ -1,4 +1,5 @@
 class TodosController < ApplicationController
+  include Authable
 
   def index
 
