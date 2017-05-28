@@ -1,3 +1,4 @@
+# Tohle je paradni
 module Authable
 
   extend ActiveSupport::Concern

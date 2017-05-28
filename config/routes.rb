@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
-
+  #Tohle je moc fajn. Jedine co je trosku blby je, ze mas tim padem dve identicke readme. Jak bys mohla zaridit to, aby se to readme nacitalo a prezentovalo z README.md a nemuselas ho duplikovat jako sablonu? (hint: nacitani souboru v kontrolleru a pak jejich dump v renderu - melo by to fungovat)
   get '/', to: 'home#about'
+
   get '/todos', to: 'todos#index'
   get '/todos/:id', to: 'todos#show'
   post '/todos', to: 'todos#create'

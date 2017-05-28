@@ -5,7 +5,7 @@ class TodosController < ApplicationController
 
     @todos = @user.todos
     status = params[:status]
-
+    # Tohle je nake zmatecne zbytecne hodne se opakujes. Jak by se to dalo napsat tak, aby ses neopakovala? (hint: mela bys mit jenom jeden render pro success (ne 4) a jeden render pro error) (hint @user.todos, se bude vzdy minimalne [], nikdy nebude nil)
     if @todos == nil
       render json: [], status: 200
       return
@@ -55,6 +55,7 @@ class TodosController < ApplicationController
   def done
 
     if find_todo_with_id(params[:id])
+      #chvalim za vykricnikove metody v tomto kontextu
       TodoManager.new(@todo).mark_done!
       render json: @todo, status: 200, serializer: TodoSerializer
     end

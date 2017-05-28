@@ -89,6 +89,7 @@ RSpec.describe "Todos", type: :request do
 
         get "/todos/#{@todo1.id}", headers: {"HTTP_ACCESS_TOKEN": @user1.access_token}
         expect(response).to have_http_status 200
+        #Assigns jsem nikdy nevidel. co to dela?
         expect(assigns(:todo)).to eq @todo1
 
       end
