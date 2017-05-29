@@ -38,6 +38,7 @@ gem 'active_model_serializers', '~> 0.10.0'
 gem 'libv8'
 gem 'redcarpet'
 gem 'emd'
+gem 'validates_email_format_of'
 
 
 group :development, :test do

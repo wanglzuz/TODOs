@@ -5,26 +5,16 @@ class TodosController < ApplicationController
 
     @todos = @user.todos
     status = params[:status]
-
-    if @todos == nil
-      render json: [], status: 200
-      return
-    elsif status == nil
-      render json: @todos, status: 200, each_serializer: TodoInfoSerializer
-      return
-    elsif status == "ongoing"
+    # Tohle je nake zmatecne zbytecne hodne se opakujes. Jak by se to dalo napsat tak, aby ses neopakovala? (hint: mela bys mit jenom jeden render pro success (ne 4) a jeden render pro error) (hint @user.todos, se bude vzdy minimalne [], nikdy nebude nil)
+    if status == "ongoing"
       @todos = @todos.where(done: false)
-      render json: @todos, status: 200, each_serializer: TodoInfoSerializer
-      return
     elsif status == "done"
       @todos = @todos.where(done: true)
-      render json: @todos, status: 200, each_serializer: TodoInfoSerializer
-      return
-    else
+    elsif status != nil
       render json: {error_message: "Invalid status!", code: "INVALID_STATUS"}, status: 404
       return
     end
-
+    render json: @todos, status: 200, each_serializer: TodoInfoSerializer
 
   end
 
@@ -38,7 +28,7 @@ class TodosController < ApplicationController
 
   def create
 
-    todo = TodoManager.create_todo!(params[:text], @user)
+    todo = TodoManager.create_todo(params[:text], @user)
     render json: todo, status: 201, serializer: TodoSerializer
 
   end
@@ -55,6 +45,7 @@ class TodosController < ApplicationController
   def done
 
     if find_todo_with_id(params[:id])
+      #chvalim za vykricnikove metody v tomto kontextu
       TodoManager.new(@todo).mark_done!
       render json: @todo, status: 200, serializer: TodoSerializer
     end
@@ -83,8 +74,5 @@ private
     end
     return true
   end
-
-
-
-
 end
+
