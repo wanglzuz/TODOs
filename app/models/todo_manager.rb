@@ -10,7 +10,7 @@ class TodoManager
 
     @todo.done = true
     @todo.save!
-    return
+    return @todo
 
   end
 
@@ -20,12 +20,12 @@ class TodoManager
 
     @todo.text = text
     @todo.save!
-    return
+    return @todo
 
   end
 
   #tady bychom asi normalne pojmenovali metodu bez vykricniku, protoze se da cekat, ze created object bude i saved. Kdybychom chteli naznacit ze navracene todo nebude saved, pouzili bychom slovo build. (build_todo)
-  def self.create_todo!(text, user)
+  def self.create_todo(text, user)
     todo = Todo.create!({text: text, created: DateTime.now, done: false, user: user})
     todo.save!
     return todo
